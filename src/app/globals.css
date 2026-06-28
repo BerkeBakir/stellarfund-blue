@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #07060f;
+  --foreground: #ededf5;
 }
 
 @theme inline {
@@ -12,15 +12,35 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* Aurora / deep-space gradient backdrop */
+  background:
+    radial-gradient(60rem 60rem at 15% -10%, rgba(99, 102, 241, 0.22), transparent 60%),
+    radial-gradient(50rem 50rem at 110% 10%, rgba(217, 70, 239, 0.18), transparent 55%),
+    radial-gradient(40rem 40rem at 50% 120%, rgba(56, 189, 248, 0.12), transparent 60%),
+    var(--background);
+  background-attachment: fixed;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Glassmorphism surface used across cards/panels */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px -12px rgba(0, 0, 0, 0.5);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #818cf8, #e879f9 60%, #38bdf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes float-dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
 }
