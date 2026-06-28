@@ -36,9 +36,14 @@ export default function Home() {
       <header className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gradient">StellarFund</h1>
-          <Link href="/proof" className="text-xs text-indigo-300 underline">
-            Proof of users →
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/ramp" className="text-xs text-indigo-300 underline">
+              Fiat ramp →
+            </Link>
+            <Link href="/proof" className="text-xs text-indigo-300 underline">
+              Proof of users →
+            </Link>
+          </div>
         </div>
         <p className="text-sm opacity-70">Cross-border crowdfunding on Stellar — USDC milestone escrow, refunds enforced by code.</p>
       </header>
