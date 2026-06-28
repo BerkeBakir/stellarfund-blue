@@ -47,3 +47,4 @@ target
 *.wasm
 
 .vercel
+.env*

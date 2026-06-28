@@ -2,11 +2,11 @@
 
 ## Links
 
-- **Public GitHub repo:** _<add after Phase F push>_
-- **Live demo:** _<add after Vercel deploy>_
+- **Public GitHub repo:** https://github.com/BerkeBakir/stellarfund
+- **Live demo:** https://stellarfund-xi.vercel.app
 - **Demo video:** _<record after deploy — script below>_
-- **Proof board (in-app):** `<live-url>/proof`
-- **Fiat ramp demo (in-app):** `<live-url>/ramp`
+- **Proof board (in-app):** https://stellarfund-xi.vercel.app/proof
+- **Fiat ramp demo (in-app):** https://stellarfund-xi.vercel.app/ramp
 
 ## Contract addresses (Stellar Testnet)
 
@@ -26,8 +26,8 @@ Sample on-chain transactions are listed in [`DEPLOYMENT.md`](DEPLOYMENT.md).
 - [x] Monitoring & analytics (Vercel Analytics + Sentry, DSN-gated)
 - [x] Proper project structure & documentation (README, DEPLOYMENT, design spec, plan)
 - [x] 15+ meaningful commits
-- [x] Public GitHub repository — _link above_
-- [ ] **Live deployment** — Phase F (Vercel)
+- [x] Public GitHub repository — https://github.com/BerkeBakir/stellarfund
+- [x] **Live deployment** — https://stellarfund-xi.vercel.app (Vercel)
 - [ ] **Min. 10 real users onboarded** — see "User testing plan"
 - [ ] **Proof of wallet interactions** — `/proof` board + stellar.expert links (auto-collected)
 - [ ] **Basic user feedback collection** — feedback widget live; summary below
