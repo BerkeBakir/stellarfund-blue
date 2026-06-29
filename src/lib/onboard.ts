@@ -3,9 +3,29 @@ import { Asset, Operation, TransactionBuilder, BASE_FEE } from '@stellar/stellar
 import { server } from './soroban';
 import { signXdr } from './wallet';
 import { fundAccount } from './friendbot';
-import { NETWORK_PASSPHRASE, TOKEN_CODE, TOKEN_ISSUER } from './config';
+import { NETWORK_PASSPHRASE, TOKEN_CODE, TOKEN_ISSUER, HORIZON_URL } from './config';
 
 const USDC = new Asset(TOKEN_CODE, TOKEN_ISSUER);
+
+/**
+ * Read the wallet's USDC trustline balance from Horizon (reliable for classic
+ * accounts). Returns null when the account has no USDC trustline yet, so callers
+ * can tell "no trustline" apart from "zero balance".
+ */
+export async function getUsdcBalance(publicKey: string): Promise<number | null> {
+  try {
+    const res = await fetch(`${HORIZON_URL}/accounts/${publicKey}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const line = (data.balances ?? []).find(
+      (b: { asset_code?: string; asset_issuer?: string }) =>
+        b.asset_code === TOKEN_CODE && b.asset_issuer === TOKEN_ISSUER,
+    );
+    return line ? Number(line.balance) : null;
+  } catch {
+    return null;
+  }
+}
 
 /** Establish (or refresh) the USDC trustline so the wallet can hold USDC. */
 export async function ensureTrustline(publicKey: string): Promise<void> {

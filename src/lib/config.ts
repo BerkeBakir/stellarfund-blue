@@ -1,6 +1,7 @@
 export const NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
 export const RPC_URL = 'https://soroban-testnet.stellar.org';
 export const FRIENDBOT_URL = 'https://friendbot.stellar.org';
+export const HORIZON_URL = 'https://horizon-testnet.stellar.org';
 export const EXPLORER_BASE_URL = 'https://stellar.expert/explorer/testnet';
 
 // StellarFund — deployed on Stellar Testnet (2026-06-28).

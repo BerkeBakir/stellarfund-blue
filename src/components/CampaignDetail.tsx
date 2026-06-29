@@ -12,6 +12,7 @@ import {
   type Summary,
   type Milestone,
 } from '@/lib/campaign';
+import { getTestUsdc, getUsdcBalance } from '@/lib/onboard';
 import { useAppStore } from '@/store';
 import { stroopsToXlm, xlmToStroops, pct, timeLeft, truncate } from '@/lib/format';
 import { explorerContractUrl } from '@/lib/config';
@@ -23,6 +24,7 @@ export default function CampaignDetail({ id }: { id: string }) {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [myContribution, setMyContribution] = useState<bigint>(0n);
+  const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
   const [amount, setAmount] = useState('');
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
@@ -37,7 +39,10 @@ export default function CampaignDetail({ id }: { id: string }) {
       const [s, m] = await Promise.all([getSummary(id), getMilestones(id)]);
       setSummary(s);
       setMilestones(m);
-      if (publicKey) setMyContribution(await contributionOf(id, publicKey));
+      if (publicKey) {
+        setMyContribution(await contributionOf(id, publicKey));
+        setUsdcBalance(await getUsdcBalance(publicKey));
+      }
     } catch {
       /* ignore */
     }
@@ -57,6 +62,9 @@ export default function CampaignDetail({ id }: { id: string }) {
         const c = await contributionOf(id, publicKey).catch(() => null);
         if (!active) return;
         if (c !== null) setMyContribution(c);
+        const bal = await getUsdcBalance(publicKey).catch(() => null);
+        if (!active) return;
+        setUsdcBalance(bal);
       }
     })();
     return () => {
@@ -76,7 +84,11 @@ export default function CampaignDetail({ id }: { id: string }) {
       toast.success(`${label} succeeded`);
       await refresh();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : `${label} failed`;
+      let msg = e instanceof Error ? e.message : `${label} failed`;
+      if (/#13|trustline/i.test(msg)) {
+        msg = 'You need test USDC first — tap “Get Test USDC”.';
+        setUsdcBalance(null);
+      }
       setTxResult(null, msg);
       setTxStatus('fail');
       toast.error(msg);
@@ -85,7 +97,26 @@ export default function CampaignDetail({ id }: { id: string }) {
     }
   }
 
+  async function handleGetUsdc() {
+    if (!publicKey) return;
+    setBusy(true);
+    const tid = toast.loading('Funding account, setting USDC trustline, minting…');
+    try {
+      await getTestUsdc(publicKey);
+      toast.success('Got 500 Test USDC!', { id: tid });
+      setUsdcBalance(await getUsdcBalance(publicKey));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not get test USDC.', { id: tid });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (!summary) return <p className="text-sm opacity-60">Loading campaign…</p>;
+
+  // null = no USDC trustline yet; 0 = trustline but empty. Either way the user
+  // must get test USDC before contributing.
+  const needsUsdc = usdcBalance === null || usdcBalance <= 0;
 
   const percent = pct(summary.raised, summary.goal);
   const ended = now > summary.deadline;
@@ -101,7 +132,8 @@ export default function CampaignDetail({ id }: { id: string }) {
     amtOk = false;
   }
 
-  const canContribute = connected && summary.status === 0 && !ended && amtOk && !busy;
+  const canContribute =
+    connected && summary.status === 0 && !ended && amtOk && !busy && !needsUsdc;
   const canRelease =
     connected && isCreator && releasable && ended && goalMet && nextIndex < milestones.length && !busy;
   const canRefund =
@@ -178,6 +210,21 @@ export default function CampaignDetail({ id }: { id: string }) {
       {summary.status === 0 && !ended && (
         <div className="glass flex flex-col gap-2 rounded-xl border border-white/10 p-5">
           <label className="text-sm font-medium">Support with USDC</label>
+          {connected && needsUsdc && (
+            <div className="flex flex-col gap-2 rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm">
+              <span>
+                You need test USDC before contributing. One tap funds your wallet, sets the USDC
+                trustline, and mints 500 test USDC.
+              </span>
+              <button
+                onClick={handleGetUsdc}
+                disabled={busy}
+                className="w-fit rounded-lg bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+              >
+                {busy ? 'Working…' : 'Get Test USDC'}
+              </button>
+            </div>
+          )}
           <input
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
@@ -185,6 +232,9 @@ export default function CampaignDetail({ id }: { id: string }) {
             placeholder="10"
             className="rounded-lg border border-white/10 bg-transparent px-3 py-2"
           />
+          {connected && !needsUsdc && usdcBalance !== null && (
+            <span className="text-xs opacity-60">Balance: {usdcBalance} USDC</span>
+          )}
           <button
             onClick={() => run(() => contribute(publicKey!, id, xlmToStroops(amount)), 'Contribution')}
             disabled={!canContribute}
