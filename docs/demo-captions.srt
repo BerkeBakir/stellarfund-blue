@@ -1,0 +1,83 @@
+1
+00:00:00,000 --> 00:00:05,000
+StellarFund — cross-border crowdfunding on Stellar.
+
+2
+00:00:05,000 --> 00:00:11,000
+Someone in Germany can fund a bakery in Kenya in seconds, for cents.
+
+3
+00:00:11,000 --> 00:00:17,000
+Funds sit in a smart contract and release as milestones are met.
+
+4
+00:00:17,000 --> 00:00:24,000
+Discovery: search and category filters; campaigns have titles, images and categories.
+
+5
+00:00:24,000 --> 00:00:30,000
+Active and past campaigns are separated for clarity.
+
+6
+00:00:30,000 --> 00:00:36,000
+Onboarding is one tap: Connect a wallet…
+
+7
+00:00:36,000 --> 00:00:44,000
+…then "Get Test USDC" — it funds the account, sets the USDC trustline and mints 500 test USDC.
+
+8
+00:00:44,000 --> 00:00:52,000
+Create a campaign with a title, description, category, cover image and milestones.
+
+9
+00:00:52,000 --> 00:00:58,000
+The campaign is deployed on-chain; its identity is saved off-chain.
+
+10
+00:00:58,000 --> 00:01:06,000
+Open a campaign and see the milestone timeline.
+
+11
+00:01:06,000 --> 00:01:14,000
+Contribute in USDC — a real, wallet-signed transaction. Contributions are capped at the goal.
+
+12
+00:01:14,000 --> 00:01:22,000
+The Proof board lists every unique backer wallet, with links to stellar.expert.
+
+13
+00:01:22,000 --> 00:01:30,000
+Every interaction is permanent and publicly verifiable on Stellar Testnet.
+
+14
+00:01:30,000 --> 00:01:38,000
+When a milestone is approved, the creator releases that tranche of funds.
+
+15
+00:01:38,000 --> 00:01:46,000
+The fiat ramp runs the real SEP-10 and SEP-24 protocol against a Stellar test anchor.
+
+16
+00:01:46,000 --> 00:01:53,000
+Pay fiat, receive USDC — and back to fiat on withdrawal. No real money; testnet only.
+
+17
+00:01:53,000 --> 00:02:01,000
+A private analytics dashboard shows live, on-chain stats by category and top campaigns.
+
+18
+00:02:01,000 --> 00:02:09,000
+Architecture: a Factory deploys each Escrow, which records success in a Reputation contract.
+
+19
+00:02:09,000 --> 00:02:16,000
+Six wallets plus WalletConnect, English and Turkish, analytics, and a PWA.
+
+20
+00:02:16,000 --> 00:02:24,000
+Next: creator profiles, comments and updates, notifications, and a path to mainnet.
+
+21
+00:02:24,000 --> 00:02:30,000
+StellarFund — fund anyone, anywhere.
