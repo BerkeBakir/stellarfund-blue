@@ -10,7 +10,7 @@ Built for the **Stellar Journey to Mastery — Green Belt (Level 4)**. Evolves t
 crowdfund engine (Factory → Campaign → Reputation) into a production-shaped fintech product.
 
 🔗 **Live demo:** https://stellarfund-xi.vercel.app
-🎬 **Demo video:** _added at submission_
+🎬 **Demo video:** https://youtu.be/BPmoLqUu1rk
 🧾 **Proof of users:** https://stellarfund-xi.vercel.app/proof (on-chain unique-backer evidence)
 
 > **Network:** Stellar **Testnet** only. No real funds.

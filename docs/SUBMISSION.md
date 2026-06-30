@@ -4,7 +4,7 @@
 
 - **Public GitHub repo:** https://github.com/BerkeBakir/stellarfund
 - **Live demo:** https://stellarfund-xi.vercel.app
-- **Demo video:** _recorded (screen capture) — upload to YouTube and paste the link here_
+- **Demo video:** https://youtu.be/BPmoLqUu1rk
 - **Proof board (in-app):** https://stellarfund-xi.vercel.app/proof
 - **Fiat ramp demo (in-app):** https://stellarfund-xi.vercel.app/ramp
 
