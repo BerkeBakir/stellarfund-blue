@@ -89,7 +89,8 @@ Collected via the in-app feedback widget (`/api/feedback`).
 # Level 5 (Blue Belt) Submission
 
 ## L5 links
-- **Live demo:** https://stellarfund-xi.vercel.app
+- **Public GitHub repo:** https://github.com/BerkeBakir/stellarfund-blue
+- **Live demo:** https://stellarfund-blue.vercel.app
 - **Pitch deck:** `docs/StellarFund-Pitch.pptx`
 - **Demo video (full walkthrough):** _<record and paste link>_
 - **Google Form (live):** https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform

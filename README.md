@@ -1,4 +1,4 @@
-# StellarFund 🟢
+# StellarFund 🔵
 
 > Cross-border crowdfunding & SME micro-financing on **Stellar Testnet** — backers fund
 > creators anywhere, money is held in a **USDC milestone-escrow** smart contract that
@@ -6,12 +6,13 @@
 > code** if the goal is missed. A real **SEP-24 anchor** bridge demonstrates the fiat↔USDC
 > on/off ramp.
 
-Built for the **Stellar Journey to Mastery — Green Belt (Level 4)**. Evolves the Orange Belt
-crowdfund engine (Factory → Campaign → Reputation) into a production-shaped fintech product.
+Built for the **Stellar Journey to Mastery — Blue Belt (Level 5)**: scaling the Green Belt MVP
+with campaign identity, discovery, more wallets, and feedback-driven iteration. Evolves the
+Orange Belt crowdfund engine (Factory → Campaign → Reputation) into a production-shaped product.
 
-🔗 **Live demo:** https://stellarfund-xi.vercel.app
+🔗 **Live demo:** https://stellarfund-blue.vercel.app
 🎬 **Demo video:** https://youtu.be/BPmoLqUu1rk
-🧾 **Proof of users:** https://stellarfund-xi.vercel.app/proof (on-chain unique-backer evidence)
+🧾 **Proof of users:** https://stellarfund-blue.vercel.app/proof (on-chain unique-backer evidence)
 
 > **Network:** Stellar **Testnet** only. No real funds.
 
@@ -82,11 +83,11 @@ User feedback is collected via a [Google Form](https://docs.google.com/forms/d/e
 
 | Feedback theme | Shipped change | Commit |
 |---|---|---|
-| "I can't tell what a campaign is — only an address shows" | Campaign identity (title/description/category/image/creator) | [`0230d31`](https://github.com/BerkeBakir/stellarfund/commit/0230d31), [`7685208`](https://github.com/BerkeBakir/stellarfund/commit/7685208) |
-| "Hard to find relevant campaigns" | Search + category filters | [`7685208`](https://github.com/BerkeBakir/stellarfund/commit/7685208) |
-| "I didn't know I needed test USDC before contributing" | First-run onboarding hint + contribute pre-check | [`3114ccc`](https://github.com/BerkeBakir/stellarfund/commit/3114ccc), [`cd3be2c`](https://github.com/BerkeBakir/stellarfund/commit/cd3be2c) |
-| "Couldn't connect my mobile/other wallet" | Added Albedo/Rabet/Hana + WalletConnect | [`24a4c3b`](https://github.com/BerkeBakir/stellarfund/commit/24a4c3b) |
-| "Proof page showed 0 backers" | getEvents pagination + 5-ID chunking fix | [`c8d6d68`](https://github.com/BerkeBakir/stellarfund/commit/c8d6d68) |
+| "I can't tell what a campaign is — only an address shows" | Campaign identity (title/description/category/image/creator) | [`0230d31`](https://github.com/BerkeBakir/stellarfund-blue/commit/0230d31), [`7685208`](https://github.com/BerkeBakir/stellarfund-blue/commit/7685208) |
+| "Hard to find relevant campaigns" | Search + category filters | [`7685208`](https://github.com/BerkeBakir/stellarfund-blue/commit/7685208) |
+| "I didn't know I needed test USDC before contributing" | First-run onboarding hint + contribute pre-check | [`3114ccc`](https://github.com/BerkeBakir/stellarfund-blue/commit/3114ccc), [`cd3be2c`](https://github.com/BerkeBakir/stellarfund-blue/commit/cd3be2c) |
+| "Couldn't connect my mobile/other wallet" | Added Albedo/Rabet/Hana + WalletConnect | [`24a4c3b`](https://github.com/BerkeBakir/stellarfund-blue/commit/24a4c3b) |
+| "Proof page showed 0 backers" | getEvents pagination + 5-ID chunking fix | [`c8d6d68`](https://github.com/BerkeBakir/stellarfund-blue/commit/c8d6d68) |
 
 > Next phase: creator profiles, campaign comments/updates, email notifications, and a path to mainnet — prioritised by the form's "which feature next?" responses.
 

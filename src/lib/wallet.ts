@@ -15,7 +15,7 @@ import { NETWORK_PASSPHRASE } from './config';
 // Optional: enables mobile wallets (LOBSTR, etc.) via WalletConnect QR/deep-link.
 // Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID (free from cloud.reown.com) to turn on.
 const WC_PROJECT_ID = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-const APP_URL = 'https://stellarfund-xi.vercel.app';
+const APP_URL = 'https://stellarfund-blue.vercel.app';
 
 let inited = false;
 function ensureInit() {
