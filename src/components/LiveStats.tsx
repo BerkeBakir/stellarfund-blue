@@ -29,7 +29,13 @@ function Counter({ value, label }: { value: number; label: string }) {
   );
 }
 
-export default function LiveStats({ summaries }: { summaries: Record<string, Summary> }) {
+export default function LiveStats({
+  summaries,
+  backers,
+}: {
+  summaries: Record<string, Summary>;
+  backers: number;
+}) {
   const { t } = useI18n();
   const [raised, setRaised] = useState(0);
   const list = Object.values(summaries);
@@ -43,7 +49,7 @@ export default function LiveStats({ summaries }: { summaries: Record<string, Sum
     <div className="grid grid-cols-3 gap-3">
       <Counter value={list.length} label={t('stats.campaigns')} />
       <Counter value={Math.round(raised)} label={t('stats.raised')} />
-      <Counter value={new Set(list.map((s) => s.creator)).size} label={t('stats.backers')} />
+      <Counter value={backers} label={t('stats.backers')} />
     </div>
   );
 }

@@ -7,10 +7,12 @@ import CampaignCard from '@/components/CampaignCard';
 import Hero from '@/components/Hero';
 import LiveStats from '@/components/LiveStats';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import FirstRunHint from '@/components/FirstRunHint';
 import { useAppStore } from '@/store';
 import { getSummary, type Summary } from '@/lib/campaign';
 import { getAllMetadata, type CampaignMeta, CATEGORIES } from '@/lib/metadata';
 import { filterCampaigns } from '@/lib/discovery';
+import { getProofData } from '@/lib/proof';
 import { useI18n } from '@/i18n/I18nProvider';
 
 export default function Home() {
@@ -20,6 +22,7 @@ export default function Home() {
   const [meta, setMeta] = useState<Record<string, CampaignMeta>>({});
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string | null>(null);
+  const [backers, setBackers] = useState(0);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
   useEffect(() => {
@@ -32,6 +35,12 @@ export default function Home() {
     getAllMetadata()
       .then((m) => {
         if (active) setMeta(m);
+      })
+      .catch(() => {});
+    // Real unique-backer count from on-chain contributions (lazy; ~few seconds).
+    getProofData()
+      .then((p) => {
+        if (active) setBackers(p.uniqueBackers);
       })
       .catch(() => {});
     return () => {
@@ -77,8 +86,9 @@ export default function Home() {
       </nav>
 
       <Hero />
+      <FirstRunHint />
       <PollProvider />
-      <LiveStats summaries={summaries} />
+      <LiveStats summaries={summaries} backers={backers} />
       <WalletBar />
 
       <div id="campaigns" className="flex items-center justify-between">
