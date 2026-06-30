@@ -13,6 +13,7 @@ import {
   type Milestone,
 } from '@/lib/campaign';
 import { getTestUsdc, getUsdcBalance } from '@/lib/onboard';
+import { getAllMetadata, type CampaignMeta } from '@/lib/metadata';
 import { useAppStore } from '@/store';
 import { stroopsToXlm, xlmToStroops, pct, timeLeft, truncate } from '@/lib/format';
 import { explorerContractUrl } from '@/lib/config';
@@ -25,6 +26,7 @@ export default function CampaignDetail({ id }: { id: string }) {
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [myContribution, setMyContribution] = useState<bigint>(0n);
   const [usdcBalance, setUsdcBalance] = useState<number | null>(null);
+  const [meta, setMeta] = useState<CampaignMeta | null>(null);
   const [amount, setAmount] = useState('');
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
@@ -33,6 +35,18 @@ export default function CampaignDetail({ id }: { id: string }) {
     const t = setInterval(() => setNow(Math.floor(Date.now() / 1000)), 30000);
     return () => clearInterval(t);
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    getAllMetadata()
+      .then((m) => {
+        if (active) setMeta(m[id] ?? null);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   const refresh = useCallback(async () => {
     try {
@@ -144,6 +158,24 @@ export default function CampaignDetail({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-4">
+      {meta && (
+        <div className="glass overflow-hidden rounded-xl border border-white/10">
+          {meta.imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={meta.imageUrl} alt={meta.title} className="h-40 w-full object-cover" />
+          )}
+          <div className="flex flex-col gap-2 p-5">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">{meta.category}</span>
+              {meta.creatorName && <span className="text-xs opacity-60">by {meta.creatorName}</span>}
+            </div>
+            <h1 className="text-xl font-bold">{meta.title}</h1>
+            {meta.description && (
+              <p className="whitespace-pre-wrap text-sm opacity-80">{meta.description}</p>
+            )}
+          </div>
+        </div>
+      )}
       <div className="glass rounded-xl border border-white/10 p-5">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm">
           <span className="font-mono opacity-70">by {truncate(summary.creator)}</span>

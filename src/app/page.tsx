@@ -9,17 +9,34 @@ import LiveStats from '@/components/LiveStats';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useAppStore } from '@/store';
 import { getSummary, type Summary } from '@/lib/campaign';
+import { getAllMetadata, type CampaignMeta, CATEGORIES } from '@/lib/metadata';
+import { filterCampaigns } from '@/lib/discovery';
 import { useI18n } from '@/i18n/I18nProvider';
 
 export default function Home() {
   const { t } = useI18n();
   const campaigns = useAppStore((s) => s.campaigns);
   const [summaries, setSummaries] = useState<Record<string, Summary>>({});
+  const [meta, setMeta] = useState<Record<string, CampaignMeta>>({});
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<string | null>(null);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
   useEffect(() => {
     const tmr = setInterval(() => setNow(Math.floor(Date.now() / 1000)), 30000);
     return () => clearInterval(tmr);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getAllMetadata()
+      .then((m) => {
+        if (active) setMeta(m);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -73,21 +90,57 @@ export default function Home() {
           {t('nav.newCampaign')}
         </Link>
       </div>
+
+      {/* Discovery: search + category chips */}
+      <div className="flex flex-col gap-2">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('discovery.search')}
+          className="rounded-lg border border-white/10 bg-transparent px-3 py-2 text-sm"
+        />
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setCategory(null)}
+            className={`rounded-full px-3 py-1 text-xs ${category === null ? 'bg-white/20 font-semibold' : 'bg-white/5 opacity-70 hover:opacity-100'}`}
+          >
+            {t('discovery.all')}
+          </button>
+          {CATEGORIES.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              className={`rounded-full px-3 py-1 text-xs ${category === c ? 'bg-white/20 font-semibold' : 'bg-white/5 opacity-70 hover:opacity-100'}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {campaigns.length === 0 ? (
         <p className="text-sm opacity-60">{t('home.empty')}</p>
       ) : (
         (() => {
           const withSummary = campaigns.filter((id) => summaries[id]);
+          // Apply discovery search + category filter.
+          const matched = new Set(
+            filterCampaigns(
+              withSummary.map((id) => ({ address: id, meta: meta[id] })),
+              { query, category },
+            ),
+          );
+          const visible = withSummary.filter((id) => matched.has(id));
           // Active = still accepting contributions (Active status, not ended, goal not reached).
-          const active = withSummary.filter((id) => {
+          const active = visible.filter((id) => {
             const s = summaries[id];
             return s.status === 0 && now <= s.deadline && s.raised < s.goal;
           });
-          const past = withSummary.filter((id) => !active.includes(id));
+          const past = visible.filter((id) => !active.includes(id));
           const Section = ({ ids }: { ids: string[] }) => (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {ids.map((id) => (
-                <CampaignCard key={id} id={id} summary={summaries[id]} now={now} />
+                <CampaignCard key={id} id={id} summary={summaries[id]} now={now} meta={meta[id]} />
               ))}
             </div>
           );
