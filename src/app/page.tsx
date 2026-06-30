@@ -76,14 +76,42 @@ export default function Home() {
       {campaigns.length === 0 ? (
         <p className="text-sm opacity-60">{t('home.empty')}</p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {campaigns.map(
-            (id) =>
-              summaries[id] && (
+        (() => {
+          const withSummary = campaigns.filter((id) => summaries[id]);
+          // Active = still accepting contributions (Active status, not ended, goal not reached).
+          const active = withSummary.filter((id) => {
+            const s = summaries[id];
+            return s.status === 0 && now <= s.deadline && s.raised < s.goal;
+          });
+          const past = withSummary.filter((id) => !active.includes(id));
+          const Section = ({ ids }: { ids: string[] }) => (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {ids.map((id) => (
                 <CampaignCard key={id} id={id} summary={summaries[id]} now={now} />
-              ),
-          )}
-        </div>
+              ))}
+            </div>
+          );
+          return (
+            <>
+              <h3 className="text-sm font-semibold uppercase tracking-wide opacity-70">
+                {t('home.active')} ({active.length})
+              </h3>
+              {active.length === 0 ? (
+                <p className="text-sm opacity-50">—</p>
+              ) : (
+                <Section ids={active} />
+              )}
+              {past.length > 0 && (
+                <>
+                  <h3 className="mt-3 text-sm font-semibold uppercase tracking-wide opacity-70">
+                    {t('home.past')} ({past.length})
+                  </h3>
+                  <Section ids={past} />
+                </>
+              )}
+            </>
+          );
+        })()
       )}
 
       <section className="glass mt-2 rounded-xl border border-white/10 p-5">

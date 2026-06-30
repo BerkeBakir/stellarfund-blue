@@ -125,15 +125,18 @@ export default function CampaignDetail({ id }: { id: string }) {
   const completed = summary.status === 2;
   const releasable = summary.status === 0 || summary.status === 1;
   const nextIndex = summary.releasedCount; // sequential release pointer
-  let amtOk = false;
+  const remaining = summary.goal - summary.raised; // USDC base units left to reach goal
+  let amt = 0n;
   try {
-    amtOk = xlmToStroops(amount) > 0n;
+    amt = xlmToStroops(amount);
   } catch {
-    amtOk = false;
+    amt = 0n;
   }
+  const amtOk = amt > 0n;
+  const overGoal = amtOk && remaining > 0n && amt > remaining;
 
   const canContribute =
-    connected && summary.status === 0 && !ended && amtOk && !busy && !needsUsdc;
+    connected && summary.status === 0 && !ended && amtOk && !overGoal && remaining > 0n && !busy && !needsUsdc;
   const canRelease =
     connected && isCreator && releasable && ended && goalMet && nextIndex < milestones.length && !busy;
   const canRefund =
@@ -225,15 +228,34 @@ export default function CampaignDetail({ id }: { id: string }) {
               </button>
             </div>
           )}
-          <input
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            inputMode="decimal"
-            placeholder="10"
-            className="rounded-lg border border-white/10 bg-transparent px-3 py-2"
-          />
-          {connected && !needsUsdc && usdcBalance !== null && (
-            <span className="text-xs opacity-60">Balance: {usdcBalance} USDC</span>
+          <div className="flex items-center gap-2">
+            <input
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              inputMode="decimal"
+              placeholder="10"
+              className="flex-1 rounded-lg border border-white/10 bg-transparent px-3 py-2"
+            />
+            <button
+              type="button"
+              onClick={() => setAmount(stroopsToXlm(remaining > 0n ? remaining : 0n))}
+              className="rounded-lg border border-white/10 px-3 py-2 text-xs"
+            >
+              Max
+            </button>
+          </div>
+          <div className="flex justify-between text-xs">
+            <span className="opacity-60">
+              Remaining to goal: {stroopsToXlm(remaining > 0n ? remaining : 0n)} USDC
+            </span>
+            {connected && !needsUsdc && usdcBalance !== null && (
+              <span className="opacity-60">Balance: {usdcBalance} USDC</span>
+            )}
+          </div>
+          {overGoal && (
+            <span className="text-xs text-amber-400">
+              Amount exceeds what’s left to reach the goal ({stroopsToXlm(remaining)} USDC).
+            </span>
           )}
           <button
             onClick={() => run(() => contribute(publicKey!, id, xlmToStroops(amount)), 'Contribution')}
