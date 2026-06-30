@@ -45,9 +45,13 @@ export async function getProofData(): Promise<ProofData> {
   let totalContributions = 0;
   let totalVolume = 0n;
 
-  if (campaigns.length > 0) {
+  // Soroban RPC allows at most 5 contract IDs per getEvents filter, so scan
+  // campaigns in chunks of 5 and merge the results.
+  const CHUNK = 5;
+  for (let c = 0; c < campaigns.length; c += CHUNK) {
+    const chunk = campaigns.slice(c, c + CHUNK);
     const filters = [
-      { type: 'contract' as const, contractIds: campaigns, topics: [['*', '*']] },
+      { type: 'contract' as const, contractIds: chunk, topics: [['*', '*']] },
     ];
     let cursor: string | undefined;
     for (let page = 0; page < MAX_PAGES; page++) {
