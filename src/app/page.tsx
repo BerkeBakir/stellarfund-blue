@@ -10,7 +10,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import FirstRunHint from '@/components/FirstRunHint';
 import { useAppStore } from '@/store';
 import { getSummary, type Summary } from '@/lib/campaign';
-import { FEEDBACK_FORM_URL } from '@/lib/config';
+import { FEEDBACK_FORM_URL, HIDDEN_CAMPAIGNS } from '@/lib/config';
 import { getAllMetadata, type CampaignMeta, CATEGORIES } from '@/lib/metadata';
 import { filterCampaigns } from '@/lib/discovery';
 import { getProofData } from '@/lib/proof';
@@ -18,12 +18,13 @@ import { useI18n } from '@/i18n/I18nProvider';
 
 export default function Home() {
   const { t } = useI18n();
-  const campaigns = useAppStore((s) => s.campaigns);
+  const allCampaigns = useAppStore((s) => s.campaigns);
+  const campaigns = allCampaigns.filter((id) => !HIDDEN_CAMPAIGNS.has(id));
   const [summaries, setSummaries] = useState<Record<string, Summary>>({});
   const [meta, setMeta] = useState<Record<string, CampaignMeta>>({});
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string | null>(null);
-  const [backers, setBackers] = useState(0);
+  const [backers, setBackers] = useState<number | null>(null);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
   useEffect(() => {

@@ -17,6 +17,13 @@ export const TOKEN_ISSUER = 'GBV7COBZWLBL5KCBWIHMWTG4LG5H4P2AMS5RDDAOFN5QBPPW2SZ
 export const CAMPAIGN_WASM_HASH =
   'f42f7c5faae416b3a77695e9f9a8330cdad45901a1deebea894081ccf7f4f1a2';
 
+// Early smoke-test campaigns with broken economics (e.g. a 0.0001 USDC goal)
+// that we hide from the UI/analytics. Their on-chain contributions still count
+// toward the /proof board — this only cleans up the campaign listings.
+export const HIDDEN_CAMPAIGNS = new Set<string>([
+  'CA55N6JECXNMPOQ526745DQYJX6ZMRSQVB5YKVPNHUQUJCAJNE5VR2SP', // "Community library books" 10 / 0.0001 USDC
+]);
+
 // External user-feedback Google Form.
 export const FEEDBACK_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform';

@@ -7,6 +7,7 @@ import { listCampaigns } from '@/lib/factory';
 import { getSummary } from '@/lib/campaign';
 import { getAllMetadata, type CampaignMeta, CATEGORIES } from '@/lib/metadata';
 import { getProofData } from '@/lib/proof';
+import { HIDDEN_CAMPAIGNS } from '@/lib/config';
 import { stroopsToXlm } from '@/lib/format';
 
 type Row = { address: string; raised: bigint; goal: bigint; meta?: CampaignMeta };
@@ -37,7 +38,8 @@ function Dashboard() {
     let active = true;
     (async () => {
       try {
-        const [addrs, meta, p] = await Promise.all([listCampaigns(), getAllMetadata(), getProofData()]);
+        const [addrsRaw, meta, p] = await Promise.all([listCampaigns(), getAllMetadata(), getProofData()]);
+        const addrs = addrsRaw.filter((a) => !HIDDEN_CAMPAIGNS.has(a));
         const summaries = await Promise.all(
           addrs.map(async (a) => {
             try {

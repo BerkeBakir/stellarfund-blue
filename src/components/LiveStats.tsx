@@ -5,11 +5,16 @@ import { useI18n } from '@/i18n/I18nProvider';
 import { stroopsToXlm } from '@/lib/format';
 import type { Summary } from '@/lib/campaign';
 
-function Counter({ value, label }: { value: number; label: string }) {
+function Counter({ value, label }: { value: number | null; label: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    // null = still loading; show a placeholder instead of a misleading "0".
+    if (value === null) {
+      node.textContent = '…';
+      return;
+    }
     const controls = animate(0, value, {
       duration: 1,
       ease: 'easeOut',
@@ -22,7 +27,7 @@ function Counter({ value, label }: { value: number; label: string }) {
   return (
     <div className="glass rounded-xl border border-white/10 p-4 text-center">
       <span ref={ref} className="text-2xl font-bold text-gradient">
-        0
+        {value === null ? '…' : '0'}
       </span>
       <div className="text-xs opacity-60">{label}</div>
     </div>
@@ -34,7 +39,7 @@ export default function LiveStats({
   backers,
 }: {
   summaries: Record<string, Summary>;
-  backers: number;
+  backers: number | null;
 }) {
   const { t } = useI18n();
   const [raised, setRaised] = useState(0);
